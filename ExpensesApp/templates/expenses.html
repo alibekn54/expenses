@@ -1,11 +1,69 @@
 {% extends 'base.html' %}
+{% load static %}
 
+
+{% block css_edition %}
+    <link rel="stylesheet" href="{% static 'ExpensesApp/css/index.css'%}">
+{% endblock %}
 {% block content %}
     <div class="expenses_sum">
         {% for i,j in sum.items %}
-            <h2>{{ j }}</h2>
+            {% if j == None %}
+                <h2>you haven't added expenses yet</h2>
+        {% else %}
+            <h2>for the period  {{ j }} $</h2>
+
+        {% endif %}
         {% endfor %}
+        <h2>
+            <a href="{% url 'new_exp' %}">
+                Create expenses
+            </a>
+        </h2>
     </div>
-    <button>Get token</button>
-    <h1>{{ token }}</h1>
+
+    <div class="expen_all_temp">
+
+    {% for i in all %}
+        <br>
+        <h1 class="expen_title">{{ i.title }}</h1>
+        <h3 class="expen_desc">{{ i.description }}</h3>
+        <h5 class="expen_money">{{ i.money }} $ </h5>
+        <hr>
+        <br>
+    {% endfor %}
+
+    </div>
+
+
+    <button type="button" class="btn btn-warning">
+        <a class="token_button" href="{% url 'token' %}">Create token</a>
+    </button>
+
+
+
+    <form action="" method="POST">
+    {% csrf_token %}
+        <input type="text" name="token" value= '{% if submitbutton == "Submit" %} {{ firstname }} {% endif %}'/><br><br>
+        <input type="Submit" name="Submit" value="Submit"/>
+    </form>
+
+    <div>
+
+
+
+    </div>
+    {% if iToken is None %}
+        <h1></h1>
+    {% else %}
+        {% if errsuc is not Success %}
+            <h1>{{ iToken }}</h1>
+        {% else %}
+            <h1>Dont enter your TOKEN</h1>
+        {% endif %}
+ {% endif %}
+
+    <h1>{{ errsuc }}</h1>
 {% endblock %}
+
+
