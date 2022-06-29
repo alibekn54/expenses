@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.edit import CreateView
 from django.db.models import Avg, Max, Min, Sum
-from .models import Expense,Token
+from .models import Expense, Token
 from django.utils.crypto import get_random_string
 from django.utils.crypto import get_random_string
 from .forms import ExpenseForm
@@ -21,7 +21,7 @@ def expenses(request):
     for t in token:
         tokenUser = i.token
 
-    sum = Expense.objects.all().filter(token=token2).aggregate(Sum('money'))
+    sum_money = Expense.objects.all().filter(token=token2).aggregate(Sum('money'))
 
     all_expenses = Expense.objects.order_by('-pk').filter(token=token2).values()
 
@@ -36,7 +36,9 @@ def expenses(request):
     else:
         error_or_suc = 'Error _The written token is not valid OR WRITTEN TOKEN IS YOURS'
 
-    return render(request, "expenses.html", context={'sum': sum, 'all': all_expenses, 'tok': token2, 'iToken': TokenInput, 'errsuc': error_or_suc, 'tokenUser': tokenUser})
+    return render(request, "expenses.html",
+                  context={'sum': sum_money, 'all': all_expenses, 'tok': token2, 'iToken': TokenInput, 'errsuc': error_or_suc,
+                           'tokenUser': tokenUser})
 
 
 def token(request):
@@ -48,7 +50,6 @@ def token(request):
         return render(request, "token.html", context={'tok': token})
 
     return render(request, "token.html", context={'tok': token})
-
 
 
 def inputTest(request):
@@ -63,28 +64,12 @@ class ExpCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.userId = self.request.user
-        token = Token.objects.all().filter(userId=self.request.user.id)
-        for i in token:
+
+        tokenUser = Token.objects.all().filter(userId=self.request.user.id)
+        for i in tokenUser:
             token2 = i
         form.instance.token = token2
         return super(ExpCreateView, self).form_valid(form)
-
-
-
-
-
-
-    # token = Token.objects.all().filter(userId=request.user.id)
-    # for i in token:
-    #     token2 = i.id
-
-
-# class EnterToken(CreateView):
-    # мы должны брать тот токен который ввел user и менять полностю его токен на тот токен который ввел;
-    # дальше удалять его токен и менять на другой
-    # и дальше у нас расходы обьедененены
-
-
 
 
 class SignUp(CreateView):
@@ -92,4 +77,5 @@ class SignUp(CreateView):
     success_url = reverse_lazy("login")
     template_name = 'registration/signup.html'
 
-# qazaqastana007
+
+'''qazaqastana007'''

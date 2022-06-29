@@ -56,14 +56,10 @@
     {% if iToken is None %}
         <h1></h1>
     {% else %}
-        {% if errsuc is not Success %}
-            <h1>{{ iToken }}</h1>
-        {% else %}
-            <h1>Dont enter your TOKEN</h1>
-        {% endif %}
  {% endif %}
 
     <h1>{{ errsuc }}</h1>
+    <p>{{ tokenUser }}</p>
 {% endblock %}
 
 
